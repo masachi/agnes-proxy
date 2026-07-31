@@ -1,6 +1,4 @@
-export const config = {
-  runtime: "edge",
-};
+export const runtime = "edge";
 
 
 const AUTH_TOKEN = process.env.PROXY_KEY;
