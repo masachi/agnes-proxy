@@ -8,6 +8,23 @@ const AUTH_TOKEN = process.env.PROXY_KEY;
 
 export default async function handler(req) {
 
+
+  return new Response(
+    JSON.stringify({
+      hit: true,
+      url: req.url,
+      method: req.method
+    }),
+    {
+      status: 200,
+      headers: {
+        "content-type": "application/json"
+      }
+    }
+  );
+
+
+
   const incomingUrl = new URL(req.url);
 
 
