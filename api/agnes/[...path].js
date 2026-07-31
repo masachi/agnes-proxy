@@ -43,17 +43,17 @@ export default async function handler(req) {
 
 
   const targetHost =
-    "apihub.agnes-ai.com";
+    "https://apihub.agnes-ai.com";
 
 
   const targetUrl =
     targetHost +
     incomingUrl.pathname.replace(
-      /^\/api\/agens/,
+      /^\/api\/agnes/,
       ""
     )
     +
-    // 注意：不要把 token 转发给 Agens
+    // 注意：不要把 token 转发给 agnes
     (() => {
 
       const params =
