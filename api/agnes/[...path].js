@@ -1,160 +1,151 @@
-// export const runtime = "edge";
+export const runtime = "edge";
 
 
-// const AUTH_TOKEN = process.env.PROXY_KEY;
+const AUTH_TOKEN = process.env.PROXY_KEY;
 
 
-// export default async function handler(req) {
+export default async function handler(req) {
 
 
-//   return new Response(
-//     JSON.stringify({
-//       hit: true,
-//       url: req.url,
-//       method: req.method
-//     }),
-//     {
-//       status: 200,
-//       headers: {
-//         "content-type": "application/json"
-//       }
-//     }
-//   );
-
-
-
-//   const incomingUrl = new URL(req.url);
-
-
-//   // ======================
-//   // 简单鉴权
-//   // ======================
-
-//   const key =
-//     incomingUrl.searchParams.get("key");
-
-
-//   if (!key || key !== AUTH_TOKEN) {
-
-//     return new Response(
-//       JSON.stringify({
-//         error: "Unauthorized"
-//       }),
-//       {
-//         status: 401,
-//         headers:{
-//           "content-type":"application/json"
-//         }
-//       }
-//     );
-
-//   }
+  return new Response(
+    JSON.stringify({
+      hit: true,
+      url: req.url,
+      method: req.method
+    }),
+    {
+      status: 200,
+      headers: {
+        "content-type": "application/json"
+      }
+    }
+  );
 
 
 
-//   // ======================
-//   // reverse proxy
-//   // ======================
+  const incomingUrl = new URL(req.url);
 
 
-//   const targetHost =
-//     "https://apihub.agnes-ai.com";
+  // ======================
+  // 简单鉴权
+  // ======================
+
+  const key =
+    incomingUrl.searchParams.get("key");
 
 
-//   const targetUrl =
-//     targetHost +
-//     incomingUrl.pathname.replace(
-//       /^\/api\/agnes/,
-//       ""
-//     )
-//     +
-//     // 注意：不要把 token 转发给 agnes
-//     (() => {
+  if (!key || key !== AUTH_TOKEN) {
 
-//       const params =
-//         new URLSearchParams(
-//           incomingUrl.search
-//         );
+    return new Response(
+      JSON.stringify({
+        error: "Unauthorized"
+      }),
+      {
+        status: 401,
+        headers:{
+          "content-type":"application/json"
+        }
+      }
+    );
 
-//       params.delete("key");
-
-//       const q =
-//         params.toString();
-
-//       return q ? `?${q}` : "";
-
-//     })();
-
-
-//     console.log("targetUrl:", targetUrl);
+  }
 
 
 
-//   const headers =
-//     new Headers();
+  // ======================
+  // reverse proxy
+  // ======================
 
 
-//   for (const [key,value]
-//        of req.headers.entries()) {
+  const targetHost =
+    "https://apihub.agnes-ai.com";
 
 
-//     const k =
-//       key.toLowerCase();
+  const targetUrl =
+    targetHost +
+    incomingUrl.pathname.replace(
+      /^\/api\/agnes/,
+      ""
+    )
+    +
+    // 注意：不要把 token 转发给 agnes
+    (() => {
+
+      const params =
+        new URLSearchParams(
+          incomingUrl.search
+        );
+
+      params.delete("key");
+
+      const q =
+        params.toString();
+
+      return q ? `?${q}` : "";
+
+    })();
 
 
-//     if(
-//       k === "host" ||
-//       k === "connection" ||
-//       k === "keep-alive" ||
-//       k === "transfer-encoding" ||
-//       k === "upgrade"
-//     ){
-//       continue;
-//     }
-
-
-//     headers.set(
-//       key,
-//       value
-//     );
-
-//   }
-
-
-
-//   const response =
-//     await fetch(
-//       targetUrl,
-//       {
-//         method:req.method,
-
-//         headers,
-
-//         body:
-//           req.method === "GET" ||
-//           req.method === "HEAD"
-//             ? undefined
-//             : req.body
-//       }
-//     );
+    console.log("targetUrl:", targetUrl);
 
 
 
-//   return new Response(
-//     response.body,
-//     {
-//       status:response.status,
-//       headers:response.headers
-//     }
-//   );
-
-// }
+  const headers =
+    new Headers();
 
 
+  for (const [key,value]
+       of req.headers.entries()) {
 
-export default function handler(req, res) {
-  res.status(200).json({
-    ok: true,
-    path: req.url
-  });
+
+    const k =
+      key.toLowerCase();
+
+
+    if(
+      k === "host" ||
+      k === "connection" ||
+      k === "keep-alive" ||
+      k === "transfer-encoding" ||
+      k === "upgrade"
+    ){
+      continue;
+    }
+
+
+    headers.set(
+      key,
+      value
+    );
+
+  }
+
+
+
+  const response =
+    await fetch(
+      targetUrl,
+      {
+        method:req.method,
+
+        headers,
+
+        body:
+          req.method === "GET" ||
+          req.method === "HEAD"
+            ? undefined
+            : req.body
+      }
+    );
+
+
+
+  return new Response(
+    response.body,
+    {
+      status:response.status,
+      headers:response.headers
+    }
+  );
+
 }
