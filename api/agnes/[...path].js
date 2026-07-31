@@ -153,16 +153,8 @@
 
 
 export default function handler(req, res) {
-  return new Response(
-    JSON.stringify({
-      ok: true,
-      pathname: new URL(req.url).pathname
-    }),
-    {
-      status: 200,
-      headers: {
-        "content-type": "application/json"
-      }
-    }
-  );
+  res.status(200).json({
+    ok: true,
+    path: req.url
+  });
 }
