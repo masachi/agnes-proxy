@@ -71,6 +71,9 @@ export default async function handler(req) {
     })();
 
 
+    console.log("targetUrl:", targetUrl);
+
+
 
   const headers =
     new Headers();
