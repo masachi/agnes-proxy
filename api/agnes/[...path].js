@@ -7,7 +7,8 @@ export default async function handler(req) {
 
   console.warn("url", req.url);
 
-  const incomingUrl = new URL(req.url);
+  const host = req.headers.get("host") || "localhost";
+const incomingUrl = new URL(req.url, `https://${host}`);
 
   // ======================
   // 1. 简单鉴权（通过 ?key=xxx 传参）
