@@ -4,6 +4,9 @@ const AUTH_TOKEN = process.env.PROXY_KEY;
 const TARGET_HOST = "https://apihub.agnes-ai.com";
 
 export default async function handler(req) {
+
+  console.warn("url", req.url);
+
   const incomingUrl = new URL(req.url);
 
   // ======================
