@@ -31,6 +31,8 @@ export default async function handler(req, res) {
   const targetPath = incomingUrl.pathname.replace(/^\/api\/agnes/, "") || "/";
   const targetUrl = `${TARGET_HOST}${targetPath}${params.toString() ? `?${params}` : ""}`;
 
+  console.warn("targetUrl", targetUrl);
+
   try {
     const upstream = await fetch(targetUrl, {
       method: req.method,
